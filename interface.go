@@ -7,7 +7,7 @@ type TxMaker interface {
 
 // Transaction Hasher
 type Hasher interface {
-	Hash(data []byte) ([]byte, error)
+	Hash(data []byte) []byte
 }
 
 // Transaction Signer
