@@ -10,9 +10,20 @@ type Hasher interface {
 	Hash(data []byte) []byte
 }
 
-// Transaction Signer
+type Wallet interface {
+	Signer
+	Verifier
+	PubKey() []byte
+}
+
+// Messge Signer
 type Signer interface {
 	Sign(hash []byte) ([]byte, error)
+}
+
+// Message Signature Verifier
+type Verifier interface {
+	Verify(hash []byte, sig []byte) bool
 }
 
 // Smallest unit
