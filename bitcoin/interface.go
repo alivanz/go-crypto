@@ -26,7 +26,7 @@ type UnspentTxSupplier interface {
 
 // Transaction filter
 type TxFilter interface {
-	TxFilter(change_script []byte, unspents []TxIn, recipient []TxOut, fee Satoshi) ([]TxIn, []TxOut, error)
+	TxFilter(change_script []byte, unspents []TxInExtended, recipient []TxOut, fee Satoshi) ([]TxIn, []TxOut, error)
 }
 
 // Raw Tx Writer (bitcoin related)
@@ -47,12 +47,17 @@ type TxFull interface {
 	Outputs() []TxOut
 }
 
-// TxIn (bitcoin related)
+// TxIn (bitcoin related, come from blockchain)
 type TxIn interface {
 	TxHash() string
 	OutputIndex() int
-	Amount() Satoshi
 	Script() []byte
+}
+
+// TxIn with additional Amount information
+type TxInExtended interface {
+	Amount() Satoshi
+	TxIn
 }
 
 // TxOut (bitcoin related)

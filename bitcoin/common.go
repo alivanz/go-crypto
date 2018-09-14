@@ -33,7 +33,7 @@ func (tx *simpletxin) Script() []byte {
 }
 
 // New TxIn
-func NewTxIn(txhash string, index int, amount Satoshi, script string) TxIn {
+func NewTxIn(txhash string, index int, amount Satoshi, script string) TxInExtended {
 	x, _ := hex.DecodeString(script)
 	return &simpletxin{txhash, index, amount, x}
 }

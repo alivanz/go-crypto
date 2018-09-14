@@ -11,10 +11,12 @@ var (
 	UnsufficientFund          = fmt.Errorf("Unsufficient fund")
 )
 
-func (noTxFilter) TxFilter(change_script []byte, unspents []TxIn, recipient []TxOut, fee Satoshi) ([]TxIn, []TxOut, error) {
+func (noTxFilter) TxFilter(change_script []byte, unspents []TxInExtended, recipient []TxOut, fee Satoshi) ([]TxIn, []TxOut, error) {
 	total_in := Satoshi(0)
 	total_out_fee := fee
+	txins := make([]TxIn, 0)
 	for _, tx := range unspents {
+		txins = append(txins, tx)
 		total_in = total_in + tx.Amount()
 	}
 	for _, tx := range recipient {
@@ -24,10 +26,13 @@ func (noTxFilter) TxFilter(change_script []byte, unspents []TxIn, recipient []Tx
 		return nil, nil, UnsufficientFund
 	}
 	change := total_in - total_out_fee
-	return unspents, append(recipient, NewTxOut(change_script, change)), nil
+	if change > 0 {
+		return txins, append(recipient, NewTxOut(change_script, change)), nil
+	}
+	return txins, recipient, nil
 }
 
-func (minTxFilter) TxFilter(change_script []byte, unspents []TxIn, recipient []TxOut, fee Satoshi) ([]TxIn, []TxOut, error) {
+func (minTxFilter) TxFilter(change_script []byte, unspents []TxInExtended, recipient []TxOut, fee Satoshi) ([]TxIn, []TxOut, error) {
 	total_out_fee := fee
 	for _, tx := range recipient {
 		total_out_fee = total_out_fee + tx.Amount()
