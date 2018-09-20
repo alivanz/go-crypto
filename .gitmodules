@@ -1,0 +1,3 @@
+[submodule "dogecoin"]
+	path = dogecoin
+	url = https://github.com/freddyisman/go-dogecoin
