@@ -3,7 +3,7 @@ package bitcoin
 import (
 	"crypto/sha256"
 
-	".."
+	"github.com/alivanz/go-crypto"
 )
 
 var BitcoinHasher crypto.Hasher = btchash{}
