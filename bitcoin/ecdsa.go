@@ -3,12 +3,11 @@ package bitcoin
 import (
 	"bytes"
 	"crypto/ecdsa"
+	"crypto/rand"
 	"fmt"
 	"math/big"
-	"math/rand"
-	"time"
 
-	"github.com/alivanz/go-crypto"
+	gcrypto ".."
 	"github.com/alivanz/go-utils"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 )
@@ -17,7 +16,7 @@ type signer struct {
 	*ecdsa.PrivateKey
 }
 
-func NewWallet(privkey []byte) (crypto.Wallet, error) {
+func NewWallet(privkey []byte) (gcrypto.Wallet, error) {
 	c := secp256k1.S256()
 	D := big.NewInt(0)
 	D.SetBytes(privkey)
@@ -30,24 +29,15 @@ func NewWallet(privkey []byte) (crypto.Wallet, error) {
 	return &signer{pk}, nil
 }
 
-func (x *signer) Sign(hash []byte) ([]byte, error) {
-	// sign
-	r, s, err := ecdsa.Sign(rand.New(rand.NewSource(time.Now().UnixNano())), x.PrivateKey, hash)
-	if err != nil {
-		return nil, err
-	}
-	return DERSignature(r, s), nil
+func (x *signer) Sign(hash []byte) (*big.Int, *big.Int, error) {
+	return ecdsa.Sign(rand.Reader, x.PrivateKey, hash)
 }
 
-func (x *signer) PubKey() []byte {
-	return append(x.PublicKey.X.Bytes(), x.PublicKey.Y.Bytes()...)
+func (x *signer) PubKey() (ecdsa.PublicKey, error) {
+	return x.PublicKey, nil
 }
 
-func (x *signer) Verify(hash []byte, sig []byte) bool {
-	r, s, err := ParseDERSignature(sig)
-	if err != nil {
-		return false
-	}
+func (x *signer) Verify(hash []byte, r, s *big.Int) bool {
 	return ecdsa.Verify(&x.PublicKey, hash, r, s)
 }
 

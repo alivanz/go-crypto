@@ -1,5 +1,10 @@
 package crypto
 
+import (
+	"crypto/ecdsa"
+	"math/big"
+)
+
 // Transaction maker, single recipient
 type TxMaker interface {
 	TxMake(from string, to string) ([]byte, error)
@@ -13,17 +18,17 @@ type Hasher interface {
 type Wallet interface {
 	Signer
 	Verifier
-	PubKey() []byte
+	PubKey() (ecdsa.PublicKey, error)
 }
 
 // Messge Signer
 type Signer interface {
-	Sign(hash []byte) ([]byte, error)
+	Sign(hash []byte) (*big.Int, *big.Int, error)
 }
 
 // Message Signature Verifier
 type Verifier interface {
-	Verify(hash []byte, sig []byte) bool
+	Verify(hash []byte, r, s *big.Int) bool
 }
 
 // Smallest unit

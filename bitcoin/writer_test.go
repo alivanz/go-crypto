@@ -3,6 +3,7 @@ package bitcoin
 import (
 	"bytes"
 	"encoding/hex"
+	"log"
 	"testing"
 )
 
@@ -10,30 +11,31 @@ import (
 func TestWriteTxMsg(t *testing.T) {
 	pubkeyhash, _ := hex.DecodeString("dd6cce9f255a8cc17bda8ba0373df8e861cb866e")
 	unspents := []TxInExtended{NewTxIn("7e3ab0ea65b60f7d1ff4b231016fc958bc0766a46770410caa0a1855459b6e41", 0, 40000, "76a91499b1ebcfc11a13df5161aba8160460fe1601d54188ac")}
-	var changeaddr Address
-	changeaddr.ParseBase58("1NAK3za9MkbAkkSBMLcvmhTD6etgB4Vhpr")
+	changeaddr, _ := AddressParseBase58("1NAK3za9MkbAkkSBMLcvmhTD6etgB4Vhpr")
 	// recipients := []TxOut{NewTxOut(P2PKH(dest.PubKeyHash()), 20000)}
 	recipients := []TxOut{}
 	txins, txouts, _ := NoTxFilter.TxFilter(P2PKH(changeaddr.PubKeyHash()), unspents, recipients, 20000)
 	txwriter := NewTxWriterV1(pubkeyhash)
 	bin, _ := txwriter.TxWrite(txins, txouts)
-	r := bytes.NewBuffer(bin)
-	t.Log(hex.EncodeToString(r.Next(4)))
-	t.Log(hex.EncodeToString(r.Next(1)))
+	{
+		r := bytes.NewBuffer(bin)
+		t.Log(hex.EncodeToString(r.Next(4)))
+		t.Log(hex.EncodeToString(r.Next(1)))
 
-	t.Log(hex.EncodeToString(r.Next(32)))
-	t.Log(hex.EncodeToString(r.Next(4)))
-	t.Log(hex.EncodeToString(r.Next(1)))
-	t.Log(hex.EncodeToString(r.Next(25)))
-	t.Log(hex.EncodeToString(r.Next(4)))
+		t.Log(hex.EncodeToString(r.Next(32)))
+		t.Log(hex.EncodeToString(r.Next(4)))
+		t.Log(hex.EncodeToString(r.Next(1)))
+		t.Log(hex.EncodeToString(r.Next(25)))
+		t.Log(hex.EncodeToString(r.Next(4)))
 
-	t.Log(hex.EncodeToString(r.Next(1)))
-	t.Log(hex.EncodeToString(r.Next(8)))
-	t.Log(hex.EncodeToString(r.Next(1)))
-	t.Log(hex.EncodeToString(r.Next(25)))
+		t.Log(hex.EncodeToString(r.Next(1)))
+		t.Log(hex.EncodeToString(r.Next(8)))
+		t.Log(hex.EncodeToString(r.Next(1)))
+		t.Log(hex.EncodeToString(r.Next(25)))
 
-	t.Log(hex.EncodeToString(r.Next(4)))
-	t.Log(hex.EncodeToString(r.Next(4)))
+		t.Log(hex.EncodeToString(r.Next(4)))
+		t.Log(hex.EncodeToString(r.Next(4)))
+	}
 
 	ref, _ := hex.DecodeString("0100000001416e9b4555180aaa0c417067a46607bc58c96f0131b2f41f7d0fb665eab03a7e000000001976a91499b1ebcfc11a13df5161aba8160460fe1601d54188acffffffff01204e0000000000001976a914e81d742e2c3c7acd4c29de090fc2c4d4120b2bf888ac0000000001000000")
 	if !bytes.Equal(bin, ref) {
@@ -53,9 +55,11 @@ func TestWriteTxMsg(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 	}
-	sig, _ := wallet.Sign(hash)
-	if !wallet.Verify(hash, sig) {
-		t.Log(hex.EncodeToString(sig))
+	pubkey, _ := wallet.PubKey()
+	log.Print(hex.EncodeToString(pubkey.X.Bytes()))
+	log.Print(hex.EncodeToString(pubkey.Y.Bytes()))
+	r, s, _ := wallet.Sign(hash)
+	if !wallet.Verify(hash, r, s) {
 		t.Fail()
 	}
 }
