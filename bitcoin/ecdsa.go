@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"math/big"
 
-	gcrypto ".."
+	gcrypto "github.com/alivanz/go-crypto"
 	"github.com/alivanz/go-utils"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 )
