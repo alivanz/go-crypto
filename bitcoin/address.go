@@ -2,6 +2,7 @@ package bitcoin
 
 import (
 	"bytes"
+	"crypto/ecdsa"
 	"crypto/sha256"
 	"fmt"
 
@@ -36,6 +37,13 @@ func AddressParseBase58(address string) (*Address, error) {
 	}
 	copy(addr[:], data)
 	return &addr, nil
+}
+func PubKeyECDSAToAddress(addrtype byte, pubkey *ecdsa.PublicKey) (*Address, error) {
+	w := bytes.NewBuffer(nil)
+	w.WriteByte(0x04)
+	w.Write(pubkey.X.Bytes())
+	w.Write(pubkey.Y.Bytes())
+	return PubKeyToAddress(addrtype, w.Bytes())
 }
 func PubKeyToAddress(addrtype byte, pubkey []byte) (*Address, error) {
 	if len(pubkey) != 65 && len(pubkey) != 33 {
