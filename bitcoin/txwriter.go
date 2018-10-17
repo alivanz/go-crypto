@@ -94,7 +94,7 @@ func (builder *TXBuilder) unsignedTransaction(i int) []byte {
 func (builder *TXBuilder) MessageHashes() [][]byte {
 	list := make([][]byte, len(builder.txins))
 	for i := 0; i < len(builder.txins); i++ {
-		msg := builder.unsignedTransaction(i)
+		msg := append(builder.unsignedTransaction(i), 0x01, 0x00, 0x00, 0x00)
 		hash := BitcoinHasher.Hash(msg)
 		list[i] = hash
 	}
