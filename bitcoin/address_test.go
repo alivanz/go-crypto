@@ -60,7 +60,7 @@ func TestAddress(t *testing.T) {
 	if addr, err := AddressParseBase58("1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9"); err != nil {
 		t.Log(err)
 		t.Fail()
-	} else if addr2, err := PubKeyHashToAddress(addr.Version(), addr.PubKeyHash()); err != nil {
+	} else if addr2, err := PubKeyHashToAddress(addr.AddrType(), addr.PubKeyHash()); err != nil {
 		t.Log(err)
 		t.Fail()
 	} else if addr.String() != addr2.String() {
