@@ -18,7 +18,7 @@ type Hasher interface {
 type Wallet interface {
 	Signer
 	Verifier
-	PubKey() (ecdsa.PublicKey, error)
+	PubKey() (*ecdsa.PublicKey, error)
 }
 
 // Messge Signer

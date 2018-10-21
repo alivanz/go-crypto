@@ -15,14 +15,6 @@ var (
 	InvalidChecksum = fmt.Errorf("Invalid Checksum")
 )
 
-const (
-	BitcoinPubKeyHash byte = 0x00
-	BitcoinScriptHash byte = 0x05
-
-	BitcoinTestnetPubKeyHash byte = 0x6f
-	BitcoinTestnetScriptHash byte = 0xc4
-)
-
 type Address [25]byte
 
 // Parse base58 address
@@ -109,7 +101,7 @@ func (addr *Address) AddrType() byte {
 	return addr[0]
 }
 
-// Print base58 format bitcoin.BitcoinPubKeyHash
+// Print base58 format
 func (addr *Address) String() string {
 	return base58.Encode(addr[:])
 }

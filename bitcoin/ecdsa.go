@@ -187,8 +187,8 @@ func (x *signer) Sign(hash []byte) (*big.Int, *big.Int, error) {
 	return r, s, nil
 }
 
-func (x *signer) PubKey() (ecdsa.PublicKey, error) {
-	return x.PublicKey, nil
+func (x *signer) PubKey() (*ecdsa.PublicKey, error) {
+	return &x.PublicKey, nil
 }
 
 func (x *signer) Verify(hash []byte, r, s *big.Int) bool {

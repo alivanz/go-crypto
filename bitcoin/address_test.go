@@ -11,7 +11,7 @@ func TestAddress(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 		return
-	} else if addr, err := PubKeyToAddress(BitcoinPubKeyHash, pubkeyx); err != nil {
+	} else if addr, err := PubKeyToAddress(MainNetworkDesc.PubKeyHashCode, pubkeyx); err != nil {
 		t.Log(err)
 		t.Fail()
 		return
@@ -28,7 +28,7 @@ func TestAddress(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 		return
-	} else if addr, err := PubKeyToAddress(BitcoinPubKeyHash, pubkeyx); err != nil {
+	} else if addr, err := PubKeyToAddress(MainNetworkDesc.PubKeyHashCode, pubkeyx); err != nil {
 		t.Log(err)
 		t.Fail()
 		return
@@ -45,7 +45,7 @@ func TestAddress(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 		return
-	} else if addr, err := PubKeyToAddress(BitcoinPubKeyHash, pubkeyx); err != nil {
+	} else if addr, err := PubKeyToAddress(MainNetworkDesc.PubKeyHashCode, pubkeyx); err != nil {
 		t.Log(err)
 		t.Fail()
 		return
